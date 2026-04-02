@@ -1,31 +1,33 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
+import { apiPaths } from '../config/api';
 
 const Profile = () => {
-  const { user } = useAuth(); // Access user token from context
+  const { user, updateSession } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    university: '',
-    address: '',
+    password: '',
   });
+  const [role, setRole] = useState('');
+  const [createdAt, setCreatedAt] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch profile data from the backend
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get('/api/auth/profile', {
+        const response = await axiosInstance.get(apiPaths.auth.profile, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setFormData({
           name: response.data.name,
           email: response.data.email,
-          university: response.data.university || '',
-          address: response.data.address || '',
+          password: '',
         });
+        setRole(response.data.role || '');
+        setCreatedAt(response.data.created_at || '');
       } catch (error) {
         alert('Failed to fetch profile. Please try again.');
       } finally {
@@ -40,9 +42,26 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axiosInstance.put('/api/auth/profile', formData, {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+      };
+      if (formData.password) payload.password = formData.password;
+      const response = await axiosInstance.put(apiPaths.auth.profile, payload, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
+      const d = response.data;
+      updateSession({
+        id: d.id,
+        name: d.name,
+        email: d.email,
+        role: d.role,
+        created_at: d.created_at,
+        token: d.token ?? user.token,
+      });
+      setFormData((prev) => ({ ...prev, password: '' }));
+      setRole(d.role || '');
+      setCreatedAt(d.created_at || '');
       alert('Profile updated successfully!');
     } catch (error) {
       alert('Failed to update profile. Please try again.');
@@ -51,7 +70,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
+  if (loading && !formData.name && !formData.email) {
     return <div className="text-center mt-20">Loading...</div>;
   }
 
@@ -59,6 +78,16 @@ const Profile = () => {
     <div className="max-w-md mx-auto mt-20">
       <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
         <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
+        {role && (
+          <p className="text-sm text-gray-600 mb-2">
+            Role: <span className="font-medium capitalize">{role}</span>
+          </p>
+        )}
+        {createdAt && (
+          <p className="text-sm text-gray-500 mb-4">
+            Member since: {new Date(createdAt).toLocaleString()}
+          </p>
+        )}
         <input
           type="text"
           placeholder="Name"
@@ -74,17 +103,10 @@ const Profile = () => {
           className="w-full mb-4 p-2 border rounded"
         />
         <input
-          type="text"
-          placeholder="University"
-          value={formData.university}
-          onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-          className="w-full mb-4 p-2 border rounded"
-        />
-        <input
-          type="text"
-          placeholder="Address"
-          value={formData.address}
-          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+          type="password"
+          placeholder="New password (leave blank to keep current)"
+          value={formData.password}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
         <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">

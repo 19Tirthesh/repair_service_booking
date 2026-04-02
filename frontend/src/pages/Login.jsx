@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
+import { apiPaths } from '../config/api';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/tasks';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post('/api/auth/login', formData);
+      const response = await axiosInstance.post(apiPaths.auth.login, formData);
       login(response.data);
-      navigate('/tasks');
+      navigate(from, { replace: true });
     } catch (error) {
       alert('Login failed. Please try again.');
     }
