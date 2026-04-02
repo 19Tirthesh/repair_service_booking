@@ -1,13 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const TaskSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  status: String,
-  created_at: {
-    type: Date,
-    default: Date.now
-  }
+const taskSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    // add other fields as needed
 });
 
-module.exports = mongoose.model("Task", TaskSchema);
+// Use mongoose.models to avoid OverwriteModelError
+module.exports = mongoose.models.Task || mongoose.model('Task', taskSchema);
