@@ -15,42 +15,44 @@ jobs:
         node-version: [22]
 
     steps:
+      # 1. Checkout code
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # 2. Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Print Env Secret
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PORT: ${{ secrets.PORT }}
-        run: |
-          echo "Secret 1 is: $MONGO_URI"
-          echo "Secret 2 is: $JWT_SECRET"
-          echo "Secret 3 is: $PORT"
+      # 3. Install PM2 globally (needed for stop/start/restart)
+      - name: Install PM2
+        run: npm install -g pm2
 
+      # 4. Install Yarn globally
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # 5. Stop any running PM2 services
       - name: Stop Running Services
-        run: pm2 stop all
+        run: pm2 stop all || echo "No processes to stop"
 
+      # 6. Install Backend Dependencies
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: |
-          npm install --global yarn
           yarn --version
           yarn install
 
+      # 7. Install Frontend Dependencies and Build
       - name: Install Frontend Dependencies and Build
         working-directory: ./frontend
         run: |
-          df -h
-          sudo rm -rf ./build
+          rm -rf ./build
           yarn install
           yarn run build
 
+      # 8. Run Backend Tests
       - name: Run Backend Tests
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -59,17 +61,22 @@ jobs:
         working-directory: ./backend
         run: npm test
 
+      # 9. Install Dependencies using npm ci (if needed)
       - name: Install Dependencies using npm ci
+        working-directory: ./backend
         run: npm ci
 
+      # 10. Create .env File
       - name: Create .env File
-        run: |
-          cd ./backend
-          touch .env
-          echo "${{ secrets.PROD }}" > .env
+        working-directory: ./backend
+        run: echo "${{ secrets.PROD }}" > .env
 
+      # 11. Start Services
       - name: Start Services
+        working-directory: ./backend
         run: pm2 start all
 
+      # 12. Restart Services (optional)
       - name: Restart Services
+        working-directory: ./backend
         run: pm2 restart all
