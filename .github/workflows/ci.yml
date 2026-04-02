@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  test:
-    name: Run Tests
+  test-and-deploy:
+    name: Test, Build, and Deploy
     runs-on: ubuntu-latest
 
     strategy:
@@ -15,26 +15,31 @@ jobs:
         node-version: [22]
 
     steps:
+      # Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix['node-version'] }}
 
+      # Remove npm lockfile if exists
       - name: Remove npm lockfile
         run: |
           if [ -f package-lock.json ]; then
             rm package-lock.json
           fi
 
+      # Install Backend Dependencies
       - name: Install Backend Dependencies
         working-directory: ./backend
         run: |
           corepack enable
           yarn install
 
+      # Install Frontend Dependencies and Build
       - name: Install Frontend Dependencies and Build
         working-directory: ./frontend
         run: |
@@ -42,6 +47,7 @@ jobs:
           yarn install
           yarn run build
 
+      # Run Backend Tests
       - name: Run Backend Tests
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
@@ -50,14 +56,28 @@ jobs:
         working-directory: ./backend
         run: yarn test
 
+      # Create .env file for PM2 server
       - name: Create .env File
         run: |
           cd ./backend
           touch .env
           echo "${{ secrets.PROD }}" > .env
 
+      # Install PM2 globally
       - name: Install PM2
         run: npm install -g pm2
 
-      - name: Restart Backend Services
-        run: pm2 restart all || pm2 start all
+      # Stop Backend if already running
+      - name: Stop Backend if running
+        working-directory: ./backend
+        run: pm2 stop repair-backend || true
+
+      # Start Backend using PM2
+      - name: Start Backend
+        working-directory: ./backend
+        run: pm2 start server.js --name repair-backend --update-env
+
+      # Optional: Restart Backend
+      - name: Restart Backend
+        working-directory: ./backend
+        run: pm2 restart repair-backend || true
