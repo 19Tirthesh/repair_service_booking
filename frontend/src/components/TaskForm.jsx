@@ -52,7 +52,7 @@ const TaskForm = ({ repairRequestId }) => {
     return () => {
       cancelled = true;
     };
-  }, [repairRequestId, isEdit]);
+  }, [repairRequestId, isEdit, authHeader, navigate]); // ✅ added missing dependencies
 
   const buildPayload = () => {
     if (isEdit && isStaff) {
