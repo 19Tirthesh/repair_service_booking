@@ -15,7 +15,7 @@ const TaskForm = ({ repairRequestId }) => {
   const [saving, setSaving] = useState(false);
   const isStaff = user?.role === 'technician' || user?.role === 'admin';
 
-  const authHeader = { Authorization: `Bearer ${user.token}` };
+  const authHeader = useMemo(() => ({ Authorization: `Bearer ${user.token}` }), [user.token]);
 
   useEffect(() => {
     if (!isEdit) {
