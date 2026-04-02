@@ -56,11 +56,8 @@ jobs:
           touch .env
           echo "${{ secrets.PROD }}" > .env
 
-      - name: Stop Running Services
-        run: pm2 stop all || true
+      - name: Install PM2
+        run: npm install -g pm2
 
-      - name: Start Services
-        run: pm2 start all
-
-      - name: Restart Services
-        run: pm2 restart all
+      - name: Restart Backend Services
+        run: pm2 restart all || pm2 start all
