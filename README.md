@@ -1,105 +1,166 @@
-**Repair Service Booking**
+# 🔧 **Repair Service Booking System**
 
-A web application to efficiently manage and book repair services, allowing users to create, track, and update service requests in a centralized system.
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framework-Express-000000?style=for-the-badge&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/CI/CD-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" />
+</p>
 
-**Table of Contents**
+---
 
-1. Project Overview
-2. Features
-3. Technologies Used
-4. Installation & Setup
-5. Usage
-6. Project Structure
-7. CI/CD Pipeline
-8. Acknowledgements
-9. Contact
+## Project Overview
 
-**1. Project Overview**
+The **Repair Service Booking System** is a full-stack web application that simplifies the process of managing repair requests.
 
-This project is a full stack web application for managing and booking repair services efficiently. Users can create, view, update, and delete service requests, allowing organized tracking of all repair tasks. The backend uses Node.js and Express, with MongoDB for data storage, ensuring reliability and scalability. Secure user authentication ensures safe access, and CI/CD integration automates testing and deployment for streamlined development.
+It allows users to:
+- Create service requests  
+- Track repair progress  
+- Manage and update bookings  
 
-**2. Features**
+Designed with scalability and usability in mind, this app integrates **secure authentication**, a **responsive UI**, and an **automated deployment pipeline**.
 
-User authentication and authorization (login/signup)
-Create, read, update, and delete repair service requests
-View all service bookings in a dashboard
-Responsive design for desktop and mobile
-Integration with MongoDB for data storage
-Automated CI/CD pipeline for testing and deployment
+---
 
-**3. Technologies Used**
+## Features
 
-Frontend: React.js (or HTML/CSS/JS if applicable)
-Backend: Node.js, Express.js
-Database: MongoDB (Atlas or Local)
-Version Control: Git & GitHub
-CI/CD: GitHub Actions (for automated testing and deployment)
-Other Tools: Postman (API testing), VS Code (development)
+- 🔐 **User Authentication** (Login & Signup with JWT)
+- 🧾 **CRUD Operations** for service requests  
+- 📊 **Dashboard View** to manage all bookings  
+- 🔄 **Real-Time Updates** for request tracking  
+- 📱 **Responsive Design** (Mobile + Desktop)  
+- ⚙️ **CI/CD Pipeline** with automated testing & deployment  
 
-**4. Installation & Setup**
+---
 
-Clone the repository:
+## Tools & Technologies
+
+- **Frontend**: React.js  
+- **Backend**: Node.js, Express.js  
+- **Database**: MongoDB  
+- **Version Control**: Git & GitHub  
+- **API Testing**: Postman  
+- **Deployment**: AWS EC2  
+- **Process Manager**: PM2  
+- **Reverse Proxy**: Nginx  
+
+---
+
+## Architecture & Workflow
+
+1. **User Authentication**  
+   - Secure login/signup using JWT  
+
+2. **Service Request Creation**  
+   - Users submit repair issues  
+
+3. **Dashboard Management**  
+   - View, edit, or delete requests  
+
+4. **Backend Processing**  
+   - Express API handles logic & database operations  
+
+5. **Deployment Pipeline**  
+   - GitHub Actions → Build → Deploy to AWS EC2  
+
+---
+
+## How to Run the Application
+
+### Clone the Repository
+```bash
 git clone https://github.com/your-username/repair-service-booking.git
 cd repair-service-booking
-Install dependencies:
+```
+
+### Install Dependencies
+```bash
 npm install
-Create a .env file with the following variables:
+```
+
+### Environment Variables
+
+Create a `.env` file:
+
+```env
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 PORT=3333
-Start the backend server:
+```
+
+### Run the Application
+
+**Start Backend**
+```bash
 npm run dev
-Start the frontend (if separate):
+```
+
+**Start Frontend**
+```bash
 cd frontend
 npm start
-Open http://localhost:3000
- in your browser.
+```
 
-**5. Usage**
-Sign up or log in to the application
-Create a new repair service request
-View all service requests in the dashboard
-Update or delete requests as needed
-Track progress of ongoing services
+### Open in Browser
+```
+http://localhost:3333
+```
 
-**6. Project Structure**
-backend/
-  ├── controllers/
-  ├── models/
-  ├── routes/
-  ├── server.js
-frontend/
-  ├── src/
-      ├── components/
-      ├── pages/
-      ├── App.js
-.gitignore
-package.json
-README.md
+---
 
-**7. CI/CD Pipeline**
+## Project Structure
 
-This project uses GitHub Actions to automate the software development workflow.
+```
+repair_service_booking/
+│
+├── backend/
+│   ├── config/            # Database & environment configuration
+│   ├── controllers/       # Request handling logic
+│   ├── middleware/        # Authentication & error handling middleware
+│   ├── models/            # Mongoose schemas
+│   ├── routes/            # API route definitions
+│   ├── utils/             # Helper functions (if any)
+│   └── server.js          # Entry point for backend
+│
+├── frontend/
+│   ├── public/            # Static files
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   ├── pages/         # Application pages
+│   │   ├── services/      # API calls
+│   │   ├── context/       # State management (if used)
+│   │   ├── App.js         # Main React component
+│   │   └── index.js       # React entry point
+│
+├── .github/
+│   └── workflows/         # GitHub Actions CI/CD pipelines
+│
+├── .env                   # Environment variables
+├── .gitignore             # Ignored files
+├── package.json           # Dependencies & scripts
+├── README.md              # Project documentation
+```
+---
 
-The Continuous Integration and Continuous deployment  pipeline performs the following steps automatically whenever code is pushed to the repository:
+## CI/CD Pipeline
 
-1. Checkout repository code
-2. Install project dependencies
-3. Run automated test cases
-4. Build the frontend application
-5. Deploy the application to AWS EC2
+This project uses **GitHub Actions** for automation:
 
-The deployment process uses:
-- GitHub Actions
-- AWS EC2 instance
-- PM2 for process management
-- Nginx as a reverse proxy
+### Continuous Integration
+- Install dependencies  
+- Run tests  
+- Build application  
 
-**8. Acknowledgements**
-Natasha Tanzila Monalisa and IFQ636 assessment guidelines
-Open-source libraries (Express.js, React.js, Mongoose)
-Tutorials and online references for web development
+### Continuous Deployment
+- Deploy to AWS EC2  
+- Manage processes using PM2  
+- Serve via Nginx  
 
-**9. Contact**
-Name: Tirthesh Mehta
-Email: N12556742@qut.edu.au
+---
+
+
+## Contact
+
+**Tirthesh Mehta**  
+**N12556742@qut.edu.au**  
