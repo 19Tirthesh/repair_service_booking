@@ -1,4 +1,4 @@
-# 🔧 **Repair Service Booking System**
+# **Repair Service Booking System**
 
 <p align="center">
   <img src="https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
@@ -25,12 +25,12 @@ Designed with scalability and usability in mind, this app integrates **secure au
 
 ## Features
 
-- 🔐 **User Authentication** (Login & Signup with JWT)
-- 🧾 **CRUD Operations** for service requests  
-- 📊 **Dashboard View** to manage all bookings  
-- 🔄 **Real-Time Updates** for request tracking  
-- 📱 **Responsive Design** (Mobile + Desktop)  
-- ⚙️ **CI/CD Pipeline** with automated testing & deployment  
+- **User Authentication** (Login & Signup with JWT)
+- **CRUD Operations** for service requests  
+- **Dashboard View** to manage all bookings  
+- **Real-Time Updates** for request tracking  
+- **Responsive Design** (Mobile + Desktop)  
+- **CI/CD Pipeline** with automated testing & deployment  
 
 ---
 
