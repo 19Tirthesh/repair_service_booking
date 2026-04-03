@@ -3,7 +3,7 @@ import { API_BASE_URL } from './config/api';
 import { notifyUnauthorized } from './utils/authSession';
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "http://3.107.177.44:3333",
   headers: { 'Content-Type': 'application/json' },
 });
 
